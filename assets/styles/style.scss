@@ -1,0 +1,1437 @@
+@charset "UTF-8";
+
+//#Mixins
+
+  //#Media Queries
+    $breakpoints: (
+      'tiny':     ( max-width:  320px ),
+      'small':    ( min-width:  360px ),
+      'medium':   ( min-width:  480px ),
+      'xmedium':  ( min-width:  720px ),
+      'large':    ( min-width:  960px ),
+      'xlarge':   ( min-width: 1200px ),
+      'xxlarge':  ( min-width: 1400px ),
+      'xxxlarge': ( min-width: 1900px )
+    );
+
+    @mixin bp($name) {
+      @if map-has-key($breakpoints, $name) {
+        @media #{inspect(map-get($breakpoints, $name))} {
+          @content;
+        }
+      }
+      @else {
+        @warn "Couldn't find a breakpoint named `#{$name}`.";
+      }
+    }
+
+  //#Transitions
+    @mixin transition-all($time){
+      -webkit-transition: all $time cubic-bezier(0.19, 1, 0.22, 1);
+      -moz-transition: all $time cubic-bezier(0.19, 1, 0.22, 1);
+      -ms-transition: all $time cubic-bezier(0.19, 1, 0.22, 1);
+      -o-transition: all $time cubic-bezier(0.19, 1, 0.22, 1);
+      transition: all $time cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    @mixin transitionEaseOut($property, $time) {
+      -webkit-transition: $property $time cubic-bezier(0.19, 1, 0.22, 1);
+      -moz-transition: $property $time cubic-bezier(0.19, 1, 0.22, 1);
+      -o-transition: $property $time cubic-bezier(0.19, 1, 0.22, 1);
+      transition: $property $time cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    @mixin transition-delay($time){
+      -webkit-transition-delay: $time;
+      -moz-transition-delay: $time;
+      -ms-transition-delay: $time;
+      -o-transition-delay: $time;
+      transition-delay: $time;
+    }
+
+    @mixin transition($property, $time) {
+      -webkit-transition: $property $time cubic-bezier(.4,0,1,1);
+      -moz-transition: $property $time cubic-bezier(.4,0,1,1);
+      -o-transition: $property $time cubic-bezier(.4,0,1,1);
+      transition: $property $time cubic-bezier(.4,0,1,1);
+    }
+
+  //#BEMy
+    @mixin element($name) {
+      @at-root #{&}__#{$name} {
+        @content;
+      }
+    }
+
+    @mixin modifier($name) {
+      @at-root #{&}--#{$name} {
+        @content;
+      }
+    }
+
+    @font-face {
+      font-family: "Monument Extended";
+      src: url("/fonts/MonumentExtended-Ultrabold.woff2") format("woff2"),
+           url("/fonts/MonumentExtended-Ultrabold.woff") format("woff");
+    }
+
+    @font-face {
+      font-family: "Monument Extended Light";
+      src: url("/fonts/MonumentExtended-Ultralight.woff2") format("woff2"),
+           url("/fonts/MonumentExtended-Ultralight.woff") format("woff");
+    }
+
+    @font-face {
+      font-family: "Neue Montreal";
+      src: url("/fonts/NeueMontreal-Regular.woff2") format("woff2"),
+           url("/fonts/NeueMontreal-Regular.woff") format("woff");
+    }
+
+//#Variables
+
+  $color-primary:       #B70DAF;
+  $color-secondary:     #620A8A;
+
+  $color-red:           #A91622;
+  $color-blue:          #46B2E3;
+  $color-yellow:        #FEF035;
+  $color-purple:        #CA89DA;
+  
+  $color-white:         #EFECEA;
+  $color-light-gray:    #E1DBD7;
+  $color-dark-gray:     #554C4C;
+  $color-darker-gray:   #3B3535;
+  $color-black:         #1C1C1C;
+
+  $color-black--05:     rgba(0,0,0,0.05);
+  $color-black--10:     rgba(0,0,0,0.1);
+  $color-black--20:     rgba(0,0,0,0.2);
+  $color-black--40:     rgba(0,0,0,0.4);
+  $color-black--60:     rgba(0,0,0,0.6);
+  $color-black--80:     rgba(0,0,0,0.8);
+
+  $font-primary:        'Monument Extended', sans-serif;
+  $font-primary-light:  'Monument Extended Light', sans-serif;
+  $font-secondary:      'Neue Montreal', sans-serif;
+  $font-tertiary:       'IBM Plex Mono', monospace;
+
+  $border:              1px solid $color-black;
+
+
+//#Base
+
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+
+  /* HTML5 display-role reset for older browsers */
+  article, aside, details, figcaption, figure, 
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
+  html{
+    scroll-behavior: smooth;
+  }
+  body {
+    background: #EFECEA;
+    line-height: 1;
+    overflow-x: hidden;
+    color: $color-black;
+  }
+  ol, ul {
+    list-style: none;
+  }
+  blockquote, q {
+    quotes: none;
+  }
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+
+  a{
+    color: $color-black;
+    text-decoration: none;
+  }
+
+  hr{
+    border: none;
+    border-top: 6px solid $color-black;
+    margin: 40px 0;
+    width: 30px;
+    padding: 0;
+    &.sliced{
+      width: 100%;
+      transform: rotate(3deg);
+      margin: 80px 0;
+    }
+    &.line{
+      border-top: 1px solid #ccc;
+      width: 100%;
+    }
+  }
+
+//#Typography
+
+  h1, h2, h3, h4, h5, h6{
+    font-family: $font-primary;
+    text-shadow: none !important;
+    line-height: 1.2;
+  }
+
+  h1, h2, h3{
+    hyphens: auto;
+  }
+
+  h1 { font-size: 42px; }
+  h2 { font-size: 36px; }
+  h3 { font-size: 28px; }
+  h4 { font-size: 24px; }
+  h5 { font-size: 20px; }
+  h6 { font-size: 16px; }
+
+  @include bp(xmedium){
+    h1 { font-size: 60px; }
+    h2 { font-size: 60px; }
+    h3 { font-size: 36px; }
+  }
+
+  @include bp(xxlarge){
+    h1 { font-size: 100px; }
+    h2 { font-size: 80px; }
+    h3 { font-size: 42px; }
+  }
+
+  p, a, li, td{
+    font-family: $font-secondary;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  p, ul, ol{
+    margin-bottom: 20px;
+  }
+
+  b{
+    font-weight: 700;
+  }
+
+  ul{
+    list-style: circle;
+    margin-left: 20px;
+  }
+
+
+//#Components
+
+  .adh-button{
+    display: inline-block;
+    padding: 10px 20px;
+    background: $color-white;
+    text-transform: uppercase;
+    color: $color-black !important;
+    font-family: $font-tertiary;
+    &.action{
+      width: 100%;
+      text-align: center;
+    }
+    &.border{
+      border: 1px solid black;
+    }
+    &.black{
+      background: black;
+      color: white !important;
+    }
+  }
+
+  @mixin adh-label(){
+    font-family: $font-tertiary;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    @include bp(xmedium){
+      font-size: 12px;
+    }
+  }
+
+  .adh-label{
+    @include adh-label;
+  }
+
+  .adh-font-light{
+    font-family: $font-primary-light;
+  }
+
+  .adh-no-padding-bottom{
+    padding-bottom: 0 !important;
+  }
+
+  .adh-no-padding-top{
+    padding-top: 0 !important;
+  }
+
+
+//#Sections
+
+  @mixin adh-section(){
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    @include bp(xmedium){
+      padding: 80px 60px;
+    }
+    @include bp(xxlarge){
+      padding: 120px 0;
+    }
+  }
+
+  @mixin padding-bottom(){
+    padding-bottom: 40px;
+    @include bp(xmedium){
+      padding-bottom: 80px;
+    }
+    @include bp(xxlarge){
+      padding-bottom: 120px   
+    }
+  }
+  @mixin padding-top(){
+    padding-top: 40px;
+    @include bp(xmedium){
+      padding-top: 80px;
+    }
+    @include bp(xxlarge){
+      padding-top: 120px   
+    }
+  }
+
+  .adh-spacer{
+    @include adh-section;
+  }
+
+  .adh-section{
+    @include adh-section;
+  }
+
+  .adh-header{
+    position: fixed;
+    height: 60px;
+    border-bottom: 1px solid black;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 9999999;
+    @include transition-all(.5s);
+    @include bp(xmedium){
+      padding: 10px 40px;
+    }
+    &.scrolled{
+      background: white;
+    }
+    @include element(info){
+      width: 70%;
+      @include bp(medium){
+        width: 40%;
+      }
+    }
+    @include element(dates){
+      @include adh-label;
+    }
+    @include element(logo){
+      font-size: initial;
+      img{
+        width: 120px;
+      }
+    }
+    @include element(nav){
+      width: 30%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      @include bp(medium){
+        width: 60%;
+      }
+    }
+    @include element(nav-item){
+      @include adh-label;
+      margin-left: 20px;
+      cursor: pointer;
+      &.call-to-action{
+        background: black;
+        color: white;
+        padding: 5px 10px;
+      }
+    }
+    @include element(nav-items){
+      display: none;
+      @include bp(large){
+        display: flex;
+        align-items: center;
+      }
+    }
+    @include element(nav-icons){
+      @include bp(medium){
+        margin-left: 10px;
+      }
+    }
+    @include element(nav-icon){
+      line-height: 1;
+      cursor: pointer;
+      @include bp(medium){
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .adh-nav{
+    position: fixed;
+    width: 100vw;
+    z-index: 999;
+    right: 0;
+    background: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(100%);
+    &.active{
+      transform: translateX(0);
+    }
+    @include transition-all(1s);
+    @include element(item){
+      font-family: $font-primary;
+      font-size: 24px;
+      @include bp(xmedium){
+        font-size: 36px;
+      }
+      &:hover{
+        color: $color-red;
+      }
+    }
+    @include bp(xmedium){
+      width: 50vw;
+    }
+  }
+
+  .adh-2019{
+    padding-top: 60px;
+    background: $color-blue;
+    .adh-speakers__list{
+      min-height: calc(100vh - 60px);
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+    }
+    .adh-speakers__item{
+      padding: 10px 20px;
+      height: 100%;
+      flex: 1 0 auto;
+      justify-content: center;
+      @include bp(xmedium){
+        padding: 20px 40px;
+        justify-content: space-between;
+      }
+      .hover-reveal {
+        width: 400px;
+        height: 400px;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .hover-reveal__img {
+        background-size: cover;
+        background-position: 50% 50%;
+      }
+      &.first, &.second{
+        .hover-reveal{
+          width: 400px;
+          height: 600px;
+          bottom: 0;
+        }
+        .hover-reveal__img{
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-position: bottom left;
+        }
+      }
+    }
+    .adh-speakers__name{
+      color: $color-yellow;
+    }
+  }
+
+  .adh-hero{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    // background: $color-red;
+    @include element(content){
+      position: relative;
+      padding: 80px 40px;
+      background: $color-white;
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 2;
+      @include bp(xmedium){
+        padding: 80px;
+      }
+    }
+    @include element(logo){
+      margin-bottom: 20px;
+    }
+    @include element(dates){
+      text-align: center;
+      margin-bottom: 20px;
+      @include bp(large){
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+    @include element(iso){
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+    @include element(image){
+      position: absolute;
+      z-index: 1;
+      display: none;
+      &.image-01{
+        width: 200px;
+        left: 0;
+        @include bp(xmedium){
+          display: block;
+        }
+      }
+      &.image-02{
+        width: 300px;
+        left: 350px;
+        top: 20px;
+        @include bp(xlarge){
+          display: block;
+        }
+      }
+      &.image-03{
+        width: 280px;
+        right: 0;
+        bottom: 100px;
+        @include bp(xmedium){
+          display: block;
+        }
+      }
+      &.image-04{
+        width: 170px;
+        bottom: 0;
+        right: 500px;
+        @include bp(xxlarge){
+          display: block;
+        }
+      }
+      &.image-05{
+        width: 260px;
+        top: 0;
+        right: 390px;
+        @include bp(xxlarge){
+          display: block;
+        }
+      }
+      &.image-06{
+        width: 50vw;
+        height: 70vh;
+        margin-left: -20vw;
+        background: $color-light-gray;
+        z-index: 0;
+        display: block;
+      }
+    }
+  }
+
+  .adh-tickets{
+    background: $color-purple;
+    @include element(container){
+      @include adh-section;
+    }
+    @include element(grid){
+      display: flex;
+      flex-wrap: wrap;
+      width: calc(100% + 20px);
+      margin-left: -10px;
+    }
+    @include element(card){
+      position: relative;
+      border: 1px solid black;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      width: 100%;
+      margin-left: 0px;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      @include bp(xmedium){
+        width: calc(50% - 20px);
+        margin: 10px;
+        @include transitionEaseOut(all, 1s);
+        &:hover{
+          background: black;
+          color: $color-purple;
+          transform: translateY(-10px);
+          .adh-tickets__button{
+            background: $color-purple;
+            color: black;
+          }
+          .early-bird__content{
+            border-top: 1px solid $color-purple;
+            border-bottom: 1px solid $color-purple;
+          }
+        }
+        @include bp(xlarge){
+          width: calc(25% - 20px);
+        }
+      }
+      &.early-bird{
+        display: none;
+        display: flex;
+        opacity: 1;
+        @include bp(xmedium){          
+          width: calc(100% - 20px);
+        }
+        .early-bird__content{
+          border-top: 1px solid black;
+          border-bottom: 1px solid black;
+          padding: 20px 0;
+          margin-bottom: 20px;
+          @include bp(xmedium){
+            display: flex;  
+          }
+          p{
+            margin-right: 40px;
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+    @include element(card-title){
+      @include adh-label; 
+      margin-bottom: 20px;
+    }
+    @include element(price){
+      margin-bottom: 20px;
+    }
+    @include element(spacer){
+      height: 45px;
+    }
+    @include element(button){
+      display: block;
+      background: black;
+      padding: 20px;
+      @include adh-label;
+      color: $color-purple;
+      text-align: center;
+      @include transitionEaseOut(all, .5s);
+    }
+    @include element(sticker){
+      position: absolute;
+      top: -30px;
+      right: -26px;
+    }
+    @include element(day-of-event){
+      @include adh-label;
+      margin-top: 20px;
+      margin-bottom: 40px;
+      opacity: .6;
+    }
+  }
+
+  .adh-program{
+    @include element(container){
+      @include adh-section;
+    }
+    h2{
+      margin-bottom: 40px;
+    }
+    img{
+      width: 100%;
+    }
+  }
+
+  .adh-about{
+    @include element(container){
+      @include adh-section;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    @include bp(xmedium){
+      align-items: center;
+    }
+    @include element(image){
+      width: 100%;
+      height: 100%;
+      @include bp(xmedium){
+        width: 50%;
+      }
+    }
+    @include element(content){
+      width: 100%;
+      padding: 40px 0 20px 0;
+      @include bp(xmedium){
+        width: 50%;
+        padding: 80px;
+      }
+    }
+  }
+
+  .adh-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999999;
+    opacity: 0;
+    visibility: hidden;
+    padding: 20px;
+    @include transitionEaseOut(all, 1s);
+    &.active{
+      opacity: 1;
+      visibility: visible;
+    }
+    @include bp(medium){
+      padding: 20px;
+    }
+    @include element(container){
+      width: 100%;
+      max-width:620px;
+      background: white;
+      position: relative;
+      height: 100%;
+      max-height: 520px;
+      overflow-x: auto;
+      padding: 20px;
+      @include bp(xmedium){
+        padding: 40px;
+      }
+    }
+    @include element(close){
+      position: fixed;
+      top: 0px;
+      right: 10px;
+      display: block;
+      cursor: pointer;
+      font-size: 36px;
+      color: #ccc;
+      z-index: 10;
+    }
+    @include element(cover){
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,.6);
+      z-index: -1;
+    }
+  }
+
+  .adh-transfer-steps{
+    border-top: 1px solid black;
+    margin-top: 40px;
+    @include element(item){
+      padding: 20px 0;
+      border-bottom: 1px solid black;
+      list-style: decimal;
+      padding-left: 20px;
+      p{
+        margin-bottom: 0;
+      }
+      a{
+        color: $color-red;
+      }
+    }
+  }
+
+  .adh-speakers{
+    background: $color-yellow;
+    @include element(container){
+      @include adh-section;
+    }
+    @include element(festival){
+      @include padding-top;
+      @include padding-bottom;
+      display: flex;
+      flex-direction: column;
+      @include bp(xmedium){
+        border-top: 1px solid $color-black;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      &.last{
+        border-top: none;
+      }
+      &.year-2017{
+        padding-top: 60px;
+      }
+      &.year-2014{
+        @include bp(xmedium){
+          padding-bottom: 0;
+        }
+      }
+    }
+    @include element(year){
+      @include bp(xmedium){
+        position: sticky;
+        top: 30px;
+        padding-top: 30px;
+        padding-right: 120px;
+      }
+    }
+    @include element(list){
+      width: 100%;
+    }
+    @include element(item){
+      display: flex;
+      border-bottom: 1px solid $color-black;
+      flex-direction: column;
+      position: relative;
+      padding: 30px 0;
+      transition: all, .3s;
+      cursor: pointer;
+      &.active{
+        background: $color-black;
+        color: $color-white;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      @include bp(xlarge){
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        &:hover{
+          background: $color-black;
+          color: $color-white;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        &:hover .adh-speakers__image{
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+    @include element(name){
+      margin-bottom: 0;
+      font-size: 22px;
+      @include bp(medium){
+        font-size: 28px;
+      }
+      @include bp(xmedium){
+        font-size: 36px;
+      }
+      @include bp(xxlarge){
+        font-size: 42px;
+      }
+      span{
+        font-family: $font-primary-light;
+      }
+    }
+    @include element(name-tape){
+      color: $color-yellow;
+      margin-bottom: 0;
+      font-size: 16px;
+      @include bp(medium){
+        font-size: 18px;
+      }
+      @include bp(xmedium){
+        font-size: 24px;
+      }
+      @include bp(xxlarge){
+        font-size: 28px;
+      }
+      span{
+        font-family: $font-primary-light;
+      }
+    }
+    @include element(country){
+      margin-left: 5px;
+      padding-left: 10px;
+      border-left: $border;
+      @include bp(xmedium){
+        margin-left: 25px;
+        padding-left: 30px;
+      }
+    }
+    @include element(image){
+      display: none;
+      @include bp(xmedium){
+        display: block;
+        position: absolute;
+        bottom: 20px;
+        right: -80px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all, .3s;
+        width: 440px;
+      }
+    }
+    @include element(pane){
+      opacity: 0;
+      visibility: hidden;
+      max-height: 0;
+      transform: translateY(100px);
+      background: $color-black;
+      color: $color-yellow;
+      @include transitionEaseOut(all, 1s);
+      &.visible{
+        opacity: 1;
+        visibility: visible;
+        max-height: 2000px;
+        transform: translateY(0);
+      }
+      @include bp(xmedium){
+        display: flex;
+      }
+    }
+    @include element(pane-content){
+      padding: 20px 20px 40px 20px;
+      max-width: 500px;
+      @include bp(xmedium){
+        padding: 40px 40px 80px 40px;
+        width: 500px;
+        flex: 1 0 auto;
+      }
+      h4{
+        margin-bottom: 40px;
+      }
+    }
+    @include element(pane-image){
+      width: 100%;
+      padding: 0px 20px 40px 20px;
+      text-align: center;
+      @include bp(xmedium){
+        padding: 0px 40px 80px 40px;
+      }
+      img{
+        width: 100%;
+        max-width: 900px;
+      }
+    }
+    @include element(link){
+      color: $color-yellow;
+      @include adh-label;
+      margin-right: 10px;
+      &:hover{
+        text-decoration: line-through;
+      }
+    }
+  }
+
+
+  .adh-talleres{
+    background: black;
+    color: white;
+    @include padding-top();
+    @include padding-bottom();
+    @include element(container){
+      @include adh-section;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    @include element(intro){
+      border-bottom: 1px solid white;
+      h4{
+        font-family: $font-primary-light !important;
+        max-width: 600px;
+      }
+      padding-bottom: 40px;
+    }
+    @include element(speaker){
+      @include adh-label;
+    }
+    @include element(item){
+      // border-top: 1px solid white;
+      border-bottom: 1px solid white;
+    }
+    @include element(heading){
+      padding-top: 40px;
+      cursor: pointer;
+      padding-bottom: 40px;
+    }
+    @include element(panel){
+      opacity: 0;
+      visibility: hidden;
+      max-height: 0;
+      transform: translateY(100px);
+      @include transitionEaseOut(all, 1s);
+      hr{
+        margin: 0;
+        background: white;
+        margin-bottom: 40px;
+        width: 40px;
+        height: 1px;
+        border: 0;
+      }
+      &.visible{
+        opacity: 1;
+        visibility: visible;
+        max-height: 600px;
+        transform: translateY(0);
+      }
+    }
+    @include element(content){
+      padding-bottom: 40px;
+    }
+  }
+
+  .adh-workshops{
+    // background: $color-light-gray;
+  }
+
+  .adh-workshops-intro{
+    @include adh-section;
+    display: flex;
+    flex-wrap: wrap;
+    @include bp(xmedium){
+      align-items: center;
+    }
+    @include element(image){
+      width: 100%;
+      height: 100%;
+      @include bp(xmedium){
+        width: 60%;
+      }
+    }
+    @include element(content){
+      width: 100%;
+      padding: 40px 0 20px 0;
+      @include bp(xmedium){
+        width: 40%;
+        padding-right: 80px;
+      }
+      h3{
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .adh-workshops-gallery{
+    @include adh-section;
+    padding-top: 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(100% + 4px);
+    max-width: 1204px;
+    @include bp(xmedium){
+      max-width: 1230px;
+    }
+    @include element(column){
+      padding: 0 2px;
+      @include bp(xmedium){
+        padding: 0 15px;
+      }
+      &.one{
+        width: 33.3333%;
+      }
+      &.two{
+        width: 41.6667%;
+        margin-top: 120px;
+      }
+      &.three{
+        width: 25%;
+        margin-top: 180px;
+      }
+    }
+    @include element(credits){
+      margin-left: auto;
+      text-align: right;
+      margin-top: 30px;
+      @include bp(large){
+        max-width: 20%;
+        margin-top: -100px;
+      }
+    }
+    @include element(image){
+      width: 100%;
+      margin-bottom: 2px;
+      @include bp(xmedium){
+        margin-bottom: 30px;
+      }
+    }
+  }  
+
+  .adh-more{
+    @include adh-section;
+    @include element(row){
+      display: flex;
+      flex-wrap: wrap;
+      @include padding-top;
+      @include bp(large){
+        align-items: center;
+      }
+    }
+    @include element(content){
+      h3{
+        margin-bottom: 20px;
+      }
+      @include bp(large){
+        width: 50%;
+        &.right{
+          order: 2;
+          padding-left: 40px;
+          @include bp(xlarge){
+            padding-left: 120px;
+          }
+        }
+        &.left{
+          padding-right: 40px;
+          padding-left: 120px;
+        }
+      }
+    }
+    @include element(image){
+      width: 100%;
+      height: 100%;
+      @include bp(large){
+        width: 50%;
+      }
+    }
+  }
+
+  .hover-reveal {
+    position: fixed;
+    width: 440px;
+    height: 320px;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+    display: none;
+    @include bp(xmedium){
+      display: initial;
+    }
+  }
+
+  .hover-reveal__inner,
+  .hover-reveal__img {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .hover-reveal__deco {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #181314;
+  }
+
+  .hover-reveal__img {
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+
+  .adh-actions{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    @include bp(xmedium){
+      flex-direction: row;
+    }
+    @include element(block){
+      @include padding-top;
+      @include padding-bottom;
+      background: $color-black;
+      width: 100%;
+      color: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-left: 40px;
+      padding-right: 40px;
+      transition: all, .3s;
+      h3{
+        margin-bottom: 20px;
+      }
+      p{
+        max-width: 320px;
+        text-align: center;
+      }
+    }
+  }
+
+  .adh-tape{
+    background: $color-yellow;
+  }
+
+  .adh-tipografica{
+    background: $color-blue;
+  }
+
+  .adh-past{
+    background: $color-black;
+    color: $color-white;
+    @include element(container){
+      @include adh-section;
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      overflow-x: auto;
+      .adh-label{
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+    @include element(block){
+      width: 100%;
+      h3{
+        margin-bottom: 30px;
+        @include bp(xmedium){
+          margin-bottom: 60px;
+        }
+      }
+      &.first{
+        margin-bottom: 60px;
+      }
+      @include bp(xmedium){
+        width: 50%;
+        &.first{
+          padding-right: 15px;
+          margin-bottom: 0;
+        }
+        &.second{
+          padding-left: 15px;
+        }
+      }
+    }
+    @include element(iframe-container){
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      padding-top: 25px;
+      height: 0;
+      iframe{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .adh-sponsors{
+    @include adh-section;
+    @include element(container){
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      @include bp(xlarge){
+        margin-top: 80px;
+      }
+    }
+    @include element(link){
+      display: flex;
+      width: 50%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      @include adh-label;
+      text-align: center;
+      img{
+        filter: grayscale(1);
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+        max-height: 200px;
+        transition: all .3s;
+        opacity: .4;
+        @include bp(xmedium){
+          &:hover{
+            opacity: 1;
+          }
+        }
+      }
+      @include bp(xmedium){
+        width: 25%;
+      }
+      @include bp(xlarge){
+        width: 14.2857%;
+      }
+      &.big{
+        width: 50%;
+        @include bp(xmedium){
+          width: 33.3333%;
+        }
+        @include bp(xlarge){
+          width: 20%;
+        }
+      }
+    }
+  }
+
+  .adh-sumate{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    background: $color-blue;
+    position: relative;
+    @include bp(xmedium){
+      padding: 60px;
+    }
+    @include element(button){
+      background: $color-black;
+      padding: 20px;
+      display: flex;
+      color: $color-white;
+      @include adh-label;
+      align-items: center;
+      justify-content: center;
+      svg{
+        fill: $color-white;
+        margin-right: 20px;
+      }
+      @include bp(xmedium){
+        position: absolute;
+        flex-direction: column;
+        right: 60px;
+        height: 160px;
+        svg{
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+
+  .adh-aplicaciones{
+    h1{
+      width: 100%;
+      margin: 80px 0px 20px 0px;
+      font-size: 32px;
+      hyphens: initial;
+      @include bp(medium){
+        margin: 80px 20px 20px 20px;
+      }
+      @include bp(large){
+        font-size: 50px; 
+      }
+      @include bp(xxlarge){
+        font-size: 80px;
+      }
+    }
+    @include element(container){
+      @include adh-section;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    @include element(block){
+      width: 100%;
+      margin-bottom: 40px;
+      @include bp(medium){
+        padding: 20px;
+      }
+      @include bp(large){
+        width: 50%;
+      }
+    }
+    img{
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    @include element(actions){
+      display: flex;
+    }
+  }
+
+  .adh-footer{
+    @include adh-section;
+    @include element(title){
+      display: flex;
+      margin-bottom: 40px;
+      align-items: center;
+      svg{
+        margin: 0 10px;
+      }
+    }
+    @include element(name){
+      font-family: $font-primary-light;
+      font-size: 22px;
+      display: inline-block;
+      margin-right: 20px;
+      margin-bottom: 0;
+      span{
+        font-family: $font-primary!important;
+      }
+      @include bp(medium){
+        font-size: 28px;
+      }
+      @include bp(xmedium){
+        font-size: 36px;
+      }
+      @include bp(xxlarge){
+        font-size: 42px;
+      }
+    }
+    @include element(copy){
+      margin-top: 40px;
+      border-top: $border;
+      padding-top: 60px;
+      display: flex;
+      flex-direction: column;
+      span{
+        margin-bottom: 20px;
+      }
+      @include bp(xmedium){
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        span{
+          margin-bottom: auto;
+        }
+      }
+    }
+  }
+
+
+
+
+
+

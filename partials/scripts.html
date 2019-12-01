@@ -1,0 +1,89 @@
+
+<script src="scripts/charming.min.js"></script>
+<script src="scripts/imagesloaded.pkgd.min.js"></script>
+<script src="scripts/TweenMax.min.js"></script>
+<script src="scripts/imageReveal.js"></script>
+<script src="scripts/swiper.min.js"></script>
+<script src="scripts/wow.min.js"></script>
+
+<script>
+
+  new WOW().init();
+
+  
+  var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 1.5,
+    spaceBetween: 30,
+    centeredSlides: true,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+
+  //Scroll nav
+  window.onscroll = function(){
+    var windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+    if (window.pageYOffset > 1){
+      document.querySelector('.adh-header').classList.add('scrolled');
+    } else {
+      document.querySelector('.adh-header').classList.remove('scrolled');
+    }
+  }
+
+
+  //Nav triggers
+  document.querySelector('.adh-header__nav-hamburguer').addEventListener('click', function(){
+    document.querySelector('.adh-nav').classList.toggle('active');
+  });
+
+  var adhNavLink = document.querySelectorAll('.adh-nav__item'), i;
+
+  for (i = 0; i < adhNavLink.length; i++) {
+    adhNavLink[i].addEventListener('click', function() {
+      document.querySelector('.adh-nav').classList.remove('active');
+    })
+  }
+
+  //Pay Modal
+
+  var adhTicketsCard = document.querySelectorAll('.adh-tickets__card'), j;
+
+  for (j = 0; j < adhTicketsCard.length; j++) {
+    adhTicketsCard[j].addEventListener('click', function() {
+      document.querySelector('.adh-modal').classList.add('active');
+    })
+  }
+
+  document.querySelector('.adh-modal__cover').addEventListener('click', function(){
+    document.querySelector('.adh-modal').classList.remove('active');
+  });
+
+  document.querySelector('.adh-modal__close').addEventListener('click', function(){
+    document.querySelector('.adh-modal').classList.remove('active');
+  });
+
+  //Talleres Accordions
+
+  var adhTalleresHeading = document.querySelectorAll('.adh-talleres__heading'), k;
+
+  for (k = 0; k < adhTalleresHeading.length; k++) {
+    adhTalleresHeading[k].addEventListener('click', function() {
+      this.nextElementSibling.classList.toggle('visible');
+    })
+  }
+
+  //Speaker Accordions
+
+  var adhSpeakers = document.querySelectorAll('.adh-speakers__item'), l;
+
+  for (l = 0; l < adhSpeakers.length; l++) {
+    adhSpeakers[l].addEventListener('click', function() {
+      this.classList.toggle('active');
+      this.nextElementSibling.classList.toggle('visible');
+    })
+  }
+
+  
+</script>
